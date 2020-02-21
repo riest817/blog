@@ -1,0 +1,254 @@
+# はじめに
+私は約3年間に渡り大学院の修士課程で[Blockly](https://developers.google.com/blockly)の研究・開発を行っています。
+これからBlocklyについて研究・開発する人のお役に立てればと思い記事を投稿しました。
+
+# Blocklyとは?
+Blockly は、Google によって開発された。ブロックを繋ぎ合せることでプログラミングを行う。Blockly を利用することで構文エラーに悩まされず、直感的にプログラミングをすることができる。JavaScript で記述されており、ドキュメントも豊富に用意されているためカスタマイズが容易である。また、Blockly で作成されるプログラムはWeb ベースのアプリケーションであるため、導入の作業が不要である。さらに、Blocklyアプリケーションで作成したブロックは、ライブラリにもともと備わっている機能で、JavaScript、Dart、Python、Lua、PHP の5種類のコードに変換して出力することができる。
+
+# Blocklyをダウンロード
+Blocklyのソースコードを、以下のリンク先からダウンロードして展開する。
+[GithubからClone](https://github.com/google/blockly)
+
+# 全体の主なファイル構成
+
+Blockly は、以下のファイルで構成されている。システムに関するソースコードはJavaScript 言語で記述されており、html 言語で記述されている。
+
+- coreフォルダ
+
+各システムのWEB ページの構成を表すファイルが存在する。そのほとんどがhtml で記述されている。
+
+- blocks フォルダ
+
+このフォルダの直下にブロックの種類ごとのファイルがあり、ブロックの形状を定義している。これらのプログラムはビルドされ、Library フォルダのblocks compressed.js ファイルに圧縮されている。そのため、これらのファイルを書き換えてもシステムが変更されることはない。
+
+- generatorsフォルダ
+
+このフォルダの直下に各プログラミング言語フォルダがある。それらのフォルダの中にブロックの種類ごとのファイルがあり、各ブロックを配置したときに出力されるソースコードが書かれている。
+
+- i18フォルダ
+
+拡張子が.soy のテンプレートがあり、コンパイルすることでJavaScript ファイルを生成する。
+
+# システム構成
+
+典型的なBlockly アプリケーションは、ワークスペース部、ブロックメニュー部、ソースコード部、XML コード部の4 つのコンポーネントによって構成される。デフォルトでは、ワークスペース部が表示されており、ソースコードタブを押すとソースコード部のコンポーネントに切り替わり、XML コードタブを押すとXML コード部のコンポーネントに切り替わる。ブロックメニュー部は常に左部に表示されている。ここでは、それぞれのコンポーネントについて説明する。
+
+<img width="382" alt="blockly.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/7eadb5d6-7e9b-897f-731e-c7e4e26ff239.png">
+
+
+### ワークスペース部
+
+ワークスペース部は、ブロックを使ってプログラミングを行うスペースである。ユーザは、ブロック部に存在するブロックをワークスペース部にドラッグ＆ドロップで自由につなぎ合わせることでプログラミングを行う。ワークスペース部の右下にはゴミ箱アイコンが存在する。ワークスペース部に設置したブロックをこのアイコンにドラッグすると、ブロックを削除することができる。その上に拡大縮小アイコン、さらにその上に中央に寄せるアイコンが表示されている。
+
+また、ワークスペース部に設置したブロックを右クリックしてコンテクストメニューを開くことで、以下のような動作が行える。
+
+- ブロックの複製
+- コメントの追加
+- ブロックの接続表現の切り替え
+- ブロックの表現の簡略化
+- ブロックの無効化
+- ブロックの削除
+- ブロックの動作を説明するWebページの表示
+
+<img width="347" alt="workspace.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/f8aeddac-7bc6-c01d-fd7c-a136a56995b4.png">
+
+
+### ブロックメニュー部
+
+ブロックメニュー部は、定義されたブロックが存在するスペースである。ブロックは、論理、数、リストなどのカテゴリーにそれぞれ格納され、カテゴリーをクリックすると、そのカテゴリーに格納されたブロックが表示される。ユーザは、このブロックメニューから新たに必要なブロックを選択して使用する。
+
+<img width="146" alt="blockmenu_open.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/cdadb74b-57a1-7798-b94e-fdf67edfaf2f.png">
+
+
+### ソースコード部
+
+ソースコード部は、作成したプログラムのソースコードを表示するスペースである。タブ名は各プログラミング言語の名称になる。ワークスペース部でブロックを組み合わせて作成したプログラムが、ソースコードに変換され、このソースコード部でいつでも確認することができる。この機能によって、Blocklyでプログラミングを学んだ学習者がソースコードを記述できるように支援する働きを持つ。システムの拡張の際に新たなブロックを実装した場合は、新たなブロックの定義と共に新たにソースコードも定義しなければならない。
+<img width="344" alt="source_code.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/756364e2-f878-0627-735f-5a2f6e671b7d.png">
+
+
+### XMLコード部
+
+XMLコード部は、作成したブロックに対応するXMLコードを表示するスペースである。ワークスペースで組み合わせたブロックの構造がXML形式で出力され、その出力されたXMLコードをセーブ、ロードすることができる。この機能によって、組み合わせたブロックを保存したり、他の学習者や教員が組み合わせたブロックを自分のワークスペース上に再現することができる。以下は、Blocly for C におけるもしも実行ブロックのXMLコードである。blockという要素タグに、type、id、x、y の4つの属性がある。typeの属性値には、ブロックの名前が入り、idの属性値は20文字のランダムな文字列が入り、idは重複しないようになっている。x、y の属性値はワークスペース上の座標が入る。
+
+```.xml
+<block type="controls_if" id="RllK?egbl/90CZu2p_wZ" x="-2" y="27"></block>
+```
+
+<img width="394" alt="XML_code.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/a3ae4624-6b1a-3f2d-5666-ecd9852bcd48.png">
+
+
+# ブロックの定義
+
+ここで、ブロックの定義方法について述べる。
+まず初めに、一般的なブロック定義のソースコードを以下に示す。
+ブロックの形状を定義したいときは、init関数のなかに関数を記述していく。
+
+```.js
+Blockly.Blocks['sample_name'] = {
+  init: function() {
+    this.setColour(100);
+    this.appendDummyInput().appendField("sample");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setOutput(true, 'String');
+    this.appendValueInput('A');
+    this.setInputsInline(true);
+    this.appendStatementInput('DO0');
+    this.setTooltip("This is a sample block.");
+  }
+};
+```
+
+Blocklyには新たなブロックを定義するためにいくつかのAPIが用意されている。以下にそれぞれのAPIの機能と使用方法を示す。
+
+### appendField
+
+appendFieldは、ブロック上に文字列や入力フォーム、ドロップダウンメニューを定義する。この前にappendDummyInputなどを呼び出す必要がある。
+
+```.js
+this.appendDummyInput().appendField("sample");
+```
+### setColor
+
+setColorは、ブロックの色を定義する。0から360までにの数値を指定することで、ブロックの色を定義することができる。
+
+```.js
+this.setColour(100);
+```
+
+### setPreviousStatement
+setPreviousStatementは、ブロック上接続部の有無を定義する。第1引数がtrueなら接続部が有りで、falseなら無しである。
+
+```.js
+this.setPreviousStatement(true);
+```
+
+### setNextStatement
+setNextStatementは、ブロック下接続部の有無を定義する。第1引数がtrueなら接続部が有りで、falseなら無しである。
+
+```.js
+this.setNextStatement(true);
+```
+
+### setOutput
+setOutputは、ブロック左接続部の有無を定義する。第1引数がtrueなら接続部が有りで、falseなら無しである。第2引数は、接続先のブロック型を指定する。接続先のブロックの型が指定したものと同じならブロックを接続することができる。型の指定がない場合は、第2引数ごと無くすか、nullを指定する。
+
+```.js
+this.setOutput(true, 'String');
+```
+
+### appendValueInput
+appendValueInputは、ブロック右接続部の有無を追加する。この接続部に関する関数は、1つのブロックに対し複数指定できる。第1引数には、接続部の名称を指定できる。接続部の名称を指定することで、ブロックの他の接続部と区別させるためである。一般には、変数ブロックや数ブロックを接続する。setCheckをそのあとにつけることで接続先のブロックの型を指定できる。
+
+```.js
+this.appendValueInput('A').setCheck('int');
+```
+
+### setInputsInline
+setInputsInlineは、appendValueInputで定義した右接続部をブロックの内側にするかを定義する。第１引数がtrueなら内側接続として定義し、falseなら外部接続である。
+
+```.js
+this.setInputsInline(true);
+```
+
+### appendStatementInput
+appendStatementInputは、ブロックの内側で上接続部を定義したブロックと接続できるように定義する。第1引数には、接続部の名称を指定できる。接続部の名称を指定することで、ブロックの他の接続部と区別させるためである。一般には、命令ブロックと接続する。
+
+```.js
+this.appendStatementInput('DO');
+```
+
+### setTooltip
+setTooltipは、ブロック上にカーソルを合わせたときに表示される内容を定義する。第１引数は、表示する内容を文字列で定義する。
+
+```.js
+this.setTooltip("This is a sample block.");
+```
+
+# Mutator機能
+
+Blocklyの機能にMutatorがある。Mutatorは、ブロックの動的変形を行い、その結果を XML に保存する機能、およびXMLからロードする機能である。Mutatorの機能が使えるブロックには、左上に歯車がある場合がある。その歯車のマークを押すと、その近くに吹き出しの形をした小窓が現れる。小窓の左半分はブロックメニュー部、右半分はワークスペース部となっている。小窓の中のコンポーネントは、このブロック限定のものである。小窓のブロックメニュー部から拡張したいブロックを取り出し、小窓のワークスペース部の既存のブロックに取り付ける。すると、吹き出し元のブロックが変形される。Mutator機能によって、ブロックの形をカスタマイズでき、ブロックメニュー部で用意されるブロックの種類を大幅に減らすことができる。
+<img width="481" alt="mutator.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/4cb6df86-a36f-2193-46e7-014508ddadf8.png">
+
+
+
+# Mutatorの定義
+
+まず初めに、Mutatorを定義したいときは、initのなかに以下のAPIを記述する。
+
+### setMutator
+
+setMutatorは、ブロックにMutator機能を実装したいときに呼び出す。setMutatorの引数内で、新たにMutatorコンストラクタを呼び出し、その引数にMutatorダイアログ内のコンテナブロックの名前を指定する。
+
+```.js
+this.setMutator(new Blockly.Mutator(['コンテナブロック名]));
+```
+
+次に、既存のBlocklyのライブラリで用意されているMutator 関連のAPIについて述べる。
+
+### mutationToDom
+
+mutationToDomは、ブロックがXMLに書き込まれるたびに呼び出される。APIが存在しないかnullを返す場合、Mutationは記録されない。APIが存在し、 'mutation' XML要素を返す場合、この要素（およびプロパティまたは子要素）は、ブロックのXML表現の先頭に保存される。
+
+```.js
+mutationToDom: function() {
+  var container = document.createElement('mutation');
+  container.setAttribute('items', this.itemCount_);
+  return container;
+}
+```
+
+### domToMutation
+
+domToMutationは、ブロックがXMLから復元されるたびに呼び出される。このAPIが存在する場合、ブロックのMutationXML要素が渡される。要素を解析し、要素のプロパティと子要素に基づいてブロックを再構成する。
+
+```.js
+domToMutation: function(xmlElement) {
+  this.itemCount_ = parseInt(xmlElement.getAttribute('items'), 10);
+  this.updateShape_();
+}
+```
+
+### decompose
+
+Mutatorダイアログが開かれると、ブロックのdecomposeが呼び出され、Mutatorのワークスペースが作成される。このAPIはMutatorダイアログにコンテナブロックを作成して初期化し、それを返す必要がある。このコンテナブロックに適切なサブブロックを追加する必要がある。
+
+```.js
+decompose: function(workspace) {
+  var containerBlock = workspace.newBlock('lists_create_with_container');
+  containerBlock.initSvg();
+  var connection = containerBlock.getInput('STACK').connection;
+  ...
+  return containerBlock;
+}
+```
+
+### compose
+
+Mutatorダイアログがそのコンテンツを保存すると、ブロックのcomposeが呼び出され、新しい設定に従って元のブロックが変更される。このAPIには、Mutatorのワークスペースからコンテナブロック（composeによって作成されて返されたものと同じブロック）が渡されれる。通常、compseはコンテナブロックに接続されたサブブロックを適用し、それに応じて元のブロックを更新する。
+
+```.js
+compose: function(containerBlock) {
+  var itemBlock = containerBlock.getInputTargetBlock('STACK');
+  var connections = [];
+  ...
+}
+```
+
+### saveConnection
+saveConnectionは、入力が並べ替えられた場合でも、元のブロックにすでに接続されているブロックが正しい入力に接続されたままになるように保証する。
+
+```.js
+saveConnections: function(containerBlock) {
+  var itemBlock = containerBlock.getInputTargetBlock('STACK');
+  ...
+}
+```
+
+
+# さいごに
+もし興味があれば私が開発しているシステムにもアクセスしてみてください(^^)↓
+[Blockly Demo](http://ymir.eng.kagawa-u.ac.jp/~sano/) by 香川研究室 佐野
+
+# 参考文献
+- [Blockly | Google Developers](https://developers.google.com/blockly)

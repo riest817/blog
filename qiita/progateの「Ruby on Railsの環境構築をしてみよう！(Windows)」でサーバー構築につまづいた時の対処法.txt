@@ -1,0 +1,44 @@
+# サーバー構築につまづいた時の対処法
+### Railsサーバーをたてたときのエラー
+初めてRuby onRailsの実行環境を行う際にRailsのアプリケーション作成まではうまくいき、さあ次はRailsのサーバーを立てようかとの`rails s`のコマンドを入力したとき、以下のようなエラーを吐かれた。
+
+```
+Could not find gem 'sqlite3 x64-mingw32' in any of the gem sources listed in your Gemfile.
+Run `bundle install` to install missing gems.
+```
+
+あれ？progateの記事通りにやったのに違う結果になったぞ。と思いいろいろ調べた結果どうもgemのバージョンに問題があるらしい。~~gemとはなんぞや？~~
+
+### Gemfileの更新
+Railsアプリケーションを作成したときに生成されたフォルダ直下にGemfileというものがある。
+<img width="896" alt="191216 qiita.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/b2819236-2eab-f5cf-b588-491cf0e176c0.png">
+そのGemfileを適当なエディタ(Atomやサクラエディタなど)で開き、9行目の
+```gem 'sqlite3'```を```gem 'sqlite3', '~> 1.3.6'```に変更。
+<img width="461" alt="191216 qiita3.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/0f8ba478-d455-2ea7-a1b7-56337b623b59.png">
+
+
+そして、コマンドプロンプトで```bundle update```と```bundle install```を実行。
+
+### あらためてRailsのサーバー構築
+コマンドプロンプトで```rails s```を実行。
+そして、適当なブラウザ(ChromeやFireFoxなど)のURLに
+```http://localhost:3000/```と打って更新して以下のようなページが表示されたら成功。
+**Yay!You're on Rails!**
+<img width="956" alt="191216 qiita2.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/9eba7359-b579-af38-8e20-6208baef2d1f.png">
+
+
+# 投稿者のRubyの学習状況
+- progateでRubyの全5レッスン完了(1周)
+- progateの「Rubyの開発環境を用意しよう！（Windows用）」を完了
+- progateの「Ruby on Railsの環境構築をしてみよう！(Windows)」のサーバー構築段階
+- progate以外でRubyを触った経験はほとんどないです
+
+# 投稿者の実行環境
+- ruby 2.4.9p362 (2019-10-02 revision 67824) [x64-mingw32]
+- Rails 5.2.3
+
+# 参考記事
+[Ruby on Railsの環境構築をしてみよう！(Windows)]
+(https://prog-8.com/docs/rails-env-win)
+[rails sできない時の対処法 - Qiita]
+(https://qiita.com/daichi41/items/fcaea1b2f0a81d4b09f4)

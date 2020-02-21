@@ -1,0 +1,41 @@
+# ブログを書くにあたって
+Qiita初投稿でブログを書くのもあまり経験がございません。
+この記事を読むときはどうかお温かい目で読んでくださいませm(__)m
+~~あと文章を書く力もございません~~
+
+# 実行環境
+### コンソール 
+- cygwin 3.1.0
+
+### エディタ 
+- sublime Text 3 
+- visual studio Code
+(バージョンはまた今度調べます)
+
+
+# mergeしてみた
+`git merge origin`とコマンド打つと以下のような実行画面になった。
+<img width="301" alt="merge.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/3e6f7491-23d9-967a-cb91-cdaacd5c1533.png">
+小さくて読みづらいが、`CINFLICT`の文字が見える
+
+# 衝突(CONFLICT)したファイルを開いてみる
+以下のキャプチャは、衝突したファイルの中身である。
+<img width="478" alt="HEAD.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/8ddffe44-4bb5-21b9-717b-3bc33b71f1f7.png">
+<img width="306" alt="origin.PNG" src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/545092/3df05831-e47d-3e35-f4a8-de3b80a363df.png">
+すると、ソースコードの所々にある`<<<<<<< HEAD` (15行目)や `=======` (46行目)や`>>>>>>> origin` (69行目) があるのがみてとれる。
+これを直さずにそのまま放置するとエラーを吐くので、早急に対処する必要がある。
+
+# <<<<<<< HEAD や ======= や >>>>>>> origin の意味するものとは？
+調べてみたところ、`<<<<<<< HEAD` と `=======` の間の部分(16行目～45行目)が作業ブランチの(自分が変更した)内容で
+`=======` や `>>>>>>> origin` の間の部分(46行目～69行目)が他の人が変更した内容だということがなんとなくわかった。
+`<<<<<<< HEAD` と `=======` の間の部分を消して `=======` や `>>>>>>> origin` の間の部分は残しておくことにした。
+
+# 備考
+
+この記事は他の人が読むほどの質の高い記事ではないと自分では思っています。
+私が得た知識をアウトプットする練習のために書きました。
+
+# 参考
+- https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%82%B8_(%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E7%AE%A1%E7%90%86%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0)#3.E3.82.A6.E3.82.A7.E3.82.A4.E3.83.9E.E3.83.BC.E3.82.B8
+- https://techacademy.jp/magazine/10264
+- https://qiita.com/te2u/items/c23f82ec84cf65564554
